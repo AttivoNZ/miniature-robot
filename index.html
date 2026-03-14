@@ -58,11 +58,16 @@
   opacity: 0;
   transform: translateY(30px);
   transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  will-change: opacity, transform;
 }
 .fade-in-section.visible {
   opacity: 1;
   transform: translateY(0);
 }
+.fade-in-section:nth-of-type(1) { transition-delay: 0s; }
+.fade-in-section:nth-of-type(2) { transition-delay: 0.15s; }
+.fade-in-section:nth-of-type(3) { transition-delay: 0.3s; }
+.fade-in-section:nth-of-type(4) { transition-delay: 0.45s; }
 
 /* Service card hover */
 .service-card {
@@ -254,16 +259,20 @@
 </footer>
 
 <script>
-// Scroll-triggered fade-in
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-    }
-  });
-}, { threshold: 0.1 });
+// Scroll-triggered fade-in — delay slightly so browser paints the initial hidden state first
+window.addEventListener('DOMContentLoaded', () => {
+  requestAnimationFrame(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
 
-document.querySelectorAll('.fade-in-section').forEach(el => observer.observe(el));
+    document.querySelectorAll('.fade-in-section').forEach(el => observer.observe(el));
+  });
+});
 
 // Particle field
 (function() {
