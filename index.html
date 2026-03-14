@@ -43,9 +43,56 @@
   height: 1px; width: 60px;
   background-color: #8B5CF6;
   box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; box-shadow: 0 0 10px rgba(139, 92, 246, 0.5); }
+  50% { opacity: 0.5; box-shadow: 0 0 20px rgba(139, 92, 246, 0.8), 0 0 40px rgba(139, 92, 246, 0.3); }
 }
 .image-filter {
   filter: grayscale(0.3) contrast(1.05) brightness(0.9);
+}
+
+/* Scroll-triggered fade-in */
+.fade-in-section {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+.fade-in-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Service card hover */
+.service-card {
+  transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
+  border: 1px solid transparent;
+  padding: 1.5rem;
+  border-radius: 4px;
+}
+.service-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(139, 92, 246, 0.3);
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.15), 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Pricing card hover */
+.pricing-card {
+  transition: background-color 0.4s ease, box-shadow 0.4s ease;
+}
+.pricing-card:hover {
+  background-color: rgba(139, 92, 246, 0.06);
+  box-shadow: 0 0 30px rgba(139, 92, 246, 0.08);
+}
+
+/* Hero particle canvas */
+#particle-canvas {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
 }
 </style>
 </head>
@@ -65,7 +112,8 @@
 <!-- Hero -->
 
 <section class="relative min-h-screen flex flex-col justify-center px-6 pt-20">
-  <div class="max-w-4xl mx-auto w-full">
+  <canvas id="particle-canvas"></canvas>
+  <div class="max-w-4xl mx-auto w-full relative z-10">
     <div class="mb-12">
       <div class="w-px h-24 bg-gradient-to-b from-transparent via-electric-violet to-transparent mx-auto md:mx-0"></div>
     </div>
@@ -89,24 +137,24 @@
 
 <!-- Services -->
 
-<section class="py-32 px-6 border-t border-zinc-900" id="services">
+<section class="py-32 px-6 border-t border-zinc-900 fade-in-section" id="services">
   <div class="max-w-4xl mx-auto">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-12">
-      <div class="space-y-4">
+      <div class="space-y-4 service-card">
         <span class="font-mono text-[10px] tracking-ultra-widest text-electric-violet uppercase">01</span>
         <h3 class="text-xl text-white font-light tracking-wide">Consulting</h3>
         <p class="text-sm text-zinc-500 leading-relaxed font-light">
           I come into your business, work out what's broken, and fix it. Practical, no fluff. You get a real operator who builds real things, not a slide deck and a follow-up invoice.
         </p>
       </div>
-      <div class="space-y-4">
+      <div class="space-y-4 service-card">
         <span class="font-mono text-[10px] tracking-ultra-widest text-electric-violet uppercase">02</span>
         <h3 class="text-xl text-white font-light tracking-wide">Marketing</h3>
         <p class="text-sm text-zinc-500 leading-relaxed font-light">
           I help you build a modern marketing capability that punches well above your weight, without the overhead of a full team.
         </p>
       </div>
-      <div class="space-y-4">
+      <div class="space-y-4 service-card">
         <span class="font-mono text-[10px] tracking-ultra-widest text-electric-violet uppercase">03</span>
         <h3 class="text-xl text-white font-light tracking-wide">Education</h3>
         <p class="text-sm text-zinc-500 leading-relaxed font-light">
@@ -119,7 +167,7 @@
 
 <!-- About -->
 
-<section class="py-32 px-6 bg-zinc-950/50 border-t border-zinc-900" id="about">
+<section class="py-32 px-6 bg-zinc-950/50 border-t border-zinc-900 fade-in-section" id="about">
   <div class="max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-16">
     <div class="w-full md:w-1/2 relative group">
       <div class="absolute inset-0 border border-electric-violet/30 translate-x-4 translate-y-4 -z-10 group-hover:translate-x-2 group-hover:translate-y-2 transition-transform duration-700"></div>
@@ -147,13 +195,13 @@
 
 <!-- Pricing -->
 
-<section class="py-32 px-6 border-t border-zinc-900" id="pricing">
+<section class="py-32 px-6 border-t border-zinc-900 fade-in-section" id="pricing">
   <div class="max-w-4xl mx-auto">
     <div class="mb-16">
       <span class="font-mono text-[10px] tracking-ultra-widest text-zinc-500 uppercase">Pricing</span>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-px bg-zinc-900">
-      <div class="bg-dark-obsidian p-10 space-y-4">
+      <div class="bg-dark-obsidian p-10 space-y-4 pricing-card">
         <span class="font-mono text-[10px] tracking-ultra-widest text-electric-violet uppercase">Day Rate</span>
         <div class="text-3xl font-light text-white">$1,500 to $2,500</div>
         <div class="font-mono text-[10px] text-zinc-600 uppercase tracking-widest">NZD / day</div>
@@ -161,7 +209,7 @@
           For defined engagements where you need a senior operator on the ground. Audit, build, fix, train. Whatever the problem is.
         </p>
       </div>
-      <div class="bg-electric-violet/10 border border-electric-violet/20 p-10 space-y-4">
+      <div class="bg-electric-violet/10 border border-electric-violet/20 p-10 space-y-4 pricing-card">
         <span class="font-mono text-[10px] tracking-ultra-widest text-electric-violet uppercase">Monthly Retainer</span>
         <div class="text-3xl font-light text-white">$3,000 to $8,000</div>
         <div class="font-mono text-[10px] text-zinc-600 uppercase tracking-widest">NZD / month</div>
@@ -169,7 +217,7 @@
           Ongoing advisory and implementation. Your operator, available when you need them. Priced on scope and commitment.
         </p>
       </div>
-      <div class="bg-dark-obsidian p-10 space-y-4">
+      <div class="bg-dark-obsidian p-10 space-y-4 pricing-card">
         <span class="font-mono text-[10px] tracking-ultra-widest text-electric-violet uppercase">Project</span>
         <div class="text-3xl font-light text-white">$8,000 to $25,000</div>
         <div class="font-mono text-[10px] text-zinc-600 uppercase tracking-widest">NZD / fixed scope</div>
@@ -177,7 +225,7 @@
           A defined outcome with a fixed price. Systems audit, marketing stack build, process redesign. Clean in, clean out.
         </p>
       </div>
-      <div class="bg-dark-obsidian p-10 space-y-4">
+      <div class="bg-dark-obsidian p-10 space-y-4 pricing-card">
         <span class="font-mono text-[10px] tracking-ultra-widest text-electric-violet uppercase">Workshop</span>
         <div class="text-3xl font-light text-white">$3,500 to $5,000</div>
         <div class="font-mono text-[10px] text-zinc-600 uppercase tracking-widest">NZD / day</div>
@@ -191,7 +239,7 @@
 
 <!-- Footer -->
 
-<footer class="py-24 px-6 text-center border-t border-zinc-900">
+<footer class="py-24 px-6 text-center border-t border-zinc-900 fade-in-section">
   <div class="max-w-xl mx-auto space-y-12">
     <h3 class="text-2xl font-light text-white tracking-wide">Ready to build something?</h3>
     <a class="inline-block border border-zinc-800 px-12 py-5 font-mono text-xs tracking-ultra-widest uppercase hover:border-electric-violet hover:text-white transition-all duration-700 ease-in-out" href="mailto:regan@attivo.nz">
@@ -204,6 +252,85 @@
     </div>
   </div>
 </footer>
+
+<script>
+// Scroll-triggered fade-in
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.fade-in-section').forEach(el => observer.observe(el));
+
+// Particle field
+(function() {
+  const canvas = document.getElementById('particle-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+  const PARTICLE_COUNT = 60;
+
+  function resize() {
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+  }
+
+  function init() {
+    resize();
+    particles = [];
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        r: Math.random() * 1.5 + 0.5,
+        alpha: Math.random() * 0.3 + 0.05,
+      });
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.x < 0) p.x = canvas.width;
+      if (p.x > canvas.width) p.x = 0;
+      if (p.y < 0) p.y = canvas.height;
+      if (p.y > canvas.height) p.y = 0;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(139, 92, 246, ' + p.alpha + ')';
+      ctx.fill();
+    });
+
+    // Draw faint connections
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 120) {
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = 'rgba(139, 92, 246, ' + (0.06 * (1 - dist / 120)) + ')';
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', resize);
+  init();
+  draw();
+})();
+</script>
 
 </body>
 </html>
