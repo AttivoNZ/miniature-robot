@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Readiness Audit — Miniature Robot</title>
+<meta property="og:title" content="AI Readiness Audit — Miniature Robot"/>
+<meta property="og:description" content="Five questions. A straight answer. Find out exactly where AI can save your team the most time — and what to tackle first."/>
+<meta property="og:url" content="https://mini-robot.nz/audit"/>
+<meta property="og:type" content="website"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #080808;
+    --surface: #111111;
+    --border: #242424;
+    --muted: #888888;
+    --text: #cccccc;
+    --white: #f2f2f2;
+    --violet: #7c6aff;
+    --violet-dim: rgba(124,106,255,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(124,106,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(124,106,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 52px;
+  }
+
+  .logo {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    color: var(--white);
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+
+  .header-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--violet);
+    text-transform: uppercase;
+  }
+
+  /* INTRO */
+  .intro { opacity: 0; animation: fadeUp 0.6s ease forwards; }
+
+  .intro-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--violet);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .intro h1 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(26px, 5vw, 38px);
+    font-weight: 300;
+    color: var(--white);
+    line-height: 1.2;
+    margin-bottom: 20px;
+  }
+
+  .intro h1 em { font-style: normal; color: var(--violet); }
+
+  .intro p {
+    font-size: 15px;
+    line-height: 1.75;
+    color: var(--text);
+    margin-bottom: 36px;
+  }
+
+  /* PROGRESS */
+  .progress-wrap {
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: fadeUp 0.5s 0.1s ease forwards;
+  }
+
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .progress-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .progress-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--violet);
+  }
+
+  .progress-bar {
+    height: 2px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--violet);
+    border-radius: 2px;
+    transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  /* QUESTION */
+  .question-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 32px;
+    margin-bottom: 16px;
+    opacity: 0;
+    animation: fadeUp 0.45s 0.15s ease forwards;
+  }
+
+  .q-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--violet);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  .q-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--white);
+    line-height: 1.5;
+    margin-bottom: 6px;
+  }
+
+  .q-sub {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 26px;
+    line-height: 1.6;
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .option {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 18px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: transparent;
+    text-align: left;
+    width: 100%;
+    font-family: inherit;
+    font-size: inherit;
+  }
+
+  .option:hover { border-color: var(--violet); background: var(--violet-dim); }
+  .option.selected { border-color: var(--violet); background: var(--violet-dim); }
+
+  .option-key {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--violet);
+    min-width: 18px;
+    margin-top: 1px;
+    font-weight: 700;
+  }
+
+  .option-text {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .option.selected .option-text { color: var(--white); }
+
+  /* NAV */
+  .nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 16px;
+    opacity: 0;
+    animation: fadeUp 0.45s 0.2s ease forwards;
+  }
+
+  .btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 12px 28px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+
+  .btn-ghost:hover { color: var(--white); border-color: var(--muted); }
+
+  .btn-primary {
+    background: var(--violet);
+    color: #fff;
+    border: 1px solid var(--violet);
+  }
+
+  .btn-primary:hover { background: #9080ff; transform: translateY(-1px); }
+  .btn-primary:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+
+  /* CONTACT */
+  .contact-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 32px;
+    opacity: 0;
+    animation: fadeUp 0.5s 0.1s ease forwards;
+  }
+
+  .form-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--violet);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .form-input {
+    width: 100%;
+    background: #1a1a1a;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 13px 16px;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    color: var(--white);
+    margin-bottom: 20px;
+    transition: border-color 0.2s;
+    outline: none;
+    -webkit-text-fill-color: var(--white);
+    caret-color: var(--violet);
+  }
+
+  .form-input:focus { border-color: var(--violet); background: #1e1e1e; }
+  .form-input::placeholder { color: #555555; }
+
+  .form-note {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 14px;
+    line-height: 1.6;
+  }
+
+  /* LOADING */
+  .loading {
+    text-align: center;
+    padding: 80px 0;
+    opacity: 0;
+    animation: fadeUp 0.5s ease forwards;
+  }
+
+  .dots { margin-bottom: 24px; }
+
+  .dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--violet);
+    margin: 0 4px;
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+
+  .dot:nth-child(2) { animation-delay: 0.2s; }
+  .dot:nth-child(3) { animation-delay: 0.4s; }
+
+  .loading-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  /* RESULT */
+  .result-wrap { opacity: 0; animation: fadeUp 0.6s ease forwards; }
+
+  .result-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--violet);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  .result-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(20px, 4vw, 30px);
+    font-weight: 300;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+
+  .result-company {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin-bottom: 40px;
+  }
+
+  /* Score */
+  .score-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--violet);
+    border-radius: 4px;
+    padding: 28px;
+    margin-bottom: 16px;
+  }
+
+  .score-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .score-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 52px;
+    font-weight: 700;
+    color: var(--violet);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .score-rating {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--white);
+    margin-bottom: 16px;
+    letter-spacing: 0.05em;
+  }
+
+  .score-bar-wrap {
+    height: 3px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+
+  .score-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--violet), #a594ff);
+    border-radius: 3px;
+    transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+    width: 0%;
+  }
+
+  .score-summary-text {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  /* Summary block */
+  .summary-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 28px;
+    margin-bottom: 16px;
+  }
+
+  .summary-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--violet);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .summary-items { display: flex; flex-direction: column; gap: 14px; }
+
+  .summary-item {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .summary-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--violet);
+    min-width: 20px;
+    margin-top: 2px;
+    font-weight: 700;
+  }
+
+  .summary-text {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* Detail toggle */
+  .detail-toggle {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 12px 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    text-transform: uppercase;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 16px;
+    transition: all 0.2s;
+  }
+
+  .detail-toggle:hover { color: var(--white); border-color: var(--muted); }
+
+  .detail-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 28px;
+    margin-bottom: 12px;
+  }
+
+  .detail-section-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--violet);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  .detail-content {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text);
+  }
+
+  .detail-content p { margin-bottom: 12px; }
+  .detail-content p:last-child { margin-bottom: 0; }
+
+  .cta-block {
+    background: var(--violet-dim);
+    border: 1px solid var(--violet);
+    border-radius: 4px;
+    padding: 28px;
+    margin-top: 24px;
+    text-align: center;
+  }
+
+  .cta-block h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+    color: var(--white);
+    margin-bottom: 10px;
+    font-weight: 400;
+  }
+
+  .cta-block p {
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 22px;
+    line-height: 1.6;
+  }
+
+  @keyframes pulse {
+    0%, 80%, 100% { transform: scale(0.6); opacity: 0.3; }
+    40% { transform: scale(1); opacity: 1; }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hidden { display: none !important; }
+
+  @media (max-width: 480px) {
+    .question-card, .contact-card, .score-block, .summary-block, .detail-section { padding: 22px; }
+    .wrap { padding: 0 16px 60px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a href="https://mini-robot.nz" class="logo">Miniature Robot</a>
+    <span class="header-tag">AI Readiness Audit</span>
+  </header>
+
+  <!-- INTRO -->
+  <div id="intro-screen">
+    <div class="intro">
+      <div class="intro-label">Free &middot; 5 minutes</div>
+      <h1>How much is manual work<br>actually <em>costing you?</em></h1>
+      <p>Five questions. A straight answer. Find out exactly where AI can save your team the most time &mdash; and what to tackle first.</p>
+      <button class="btn btn-primary" onclick="startAudit()" style="padding:14px 40px;font-size:12px">Start the Audit &rarr;</button>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="quiz-screen" class="hidden">
+    <div class="progress-wrap">
+      <div class="progress-header">
+        <span class="progress-label">Progress</span>
+        <span class="progress-count" id="progress-count">1 / 5</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="question-card">
+      <div class="q-number" id="q-number">Question 01</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-sub" id="q-sub"></div>
+      <div class="options" id="options"></div>
+    </div>
+
+    <div class="nav">
+      <button class="btn btn-ghost" id="back-btn" onclick="goBack()">&larr; Back</button>
+      <button class="btn btn-primary" id="next-btn" onclick="goNext()" disabled>Continue &rarr;</button>
+    </div>
+  </div>
+
+  <!-- CONTACT -->
+  <div id="contact-screen" class="hidden">
+    <div class="contact-card">
+      <div class="q-number" style="margin-bottom:16px">One last thing</div>
+      <div class="q-text" style="margin-bottom:8px">Where should we send your report?</div>
+      <div class="q-sub" style="margin-bottom:28px">Your personalised results are generating now. Regan may follow up if there's a clear fit.</div>
+
+      <label class="form-label">Name</label>
+      <input class="form-input" type="text" id="f-name" placeholder="Your name" autocomplete="name">
+
+      <label class="form-label">Work Email</label>
+      <input class="form-input" type="email" id="f-email" placeholder="you@company.com" autocomplete="email">
+
+      <label class="form-label">Company</label>
+      <input class="form-input" type="text" id="f-company" placeholder="Company name" autocomplete="organization">
+
+      <button class="btn btn-primary" onclick="generateReport()" style="width:100%;padding:15px;font-size:12px">Generate My Report &rarr;</button>
+      <p class="form-note">No spam. Used only to send your report and follow up if relevant.</p>
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  <div id="loading-screen" class="hidden">
+    <div class="loading">
+      <div class="dots">
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+      <div class="loading-text" id="loading-text">Analysing your responses</div>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div id="result-screen" class="hidden">
+    <div class="result-wrap">
+      <div class="result-label">Your AI Readiness Report</div>
+      <div class="result-name" id="result-name"></div>
+      <div class="result-company" id="result-company"></div>
+
+      <div class="score-block">
+        <div class="score-title">Workflow Inefficiency Score</div>
+        <div class="score-value" id="score-number">&mdash;</div>
+        <div class="score-rating" id="score-rating"></div>
+        <div class="score-bar-wrap">
+          <div class="score-bar-fill" id="score-bar"></div>
+        </div>
+        <div class="score-summary-text" id="score-summary"></div>
+      </div>
+
+      <!-- PUNCHY SUMMARY -->
+      <div class="summary-block">
+        <div class="summary-title">The three things that matter</div>
+        <div class="summary-items" id="summary-items"></div>
+      </div>
+
+      <!-- CTA -->
+      <div class="cta-block">
+        <h3>Want to go deeper?</h3>
+        <p id="cta-text">Based on your results, there's a clear opportunity here.</p>
+        <a href="https://mini-robot.nz#contact" class="btn btn-primary" style="display:inline-block;text-decoration:none">Talk to Regan &rarr;</a>
+      </div>
+
+      <!-- DETAIL TOGGLE -->
+      <button class="detail-toggle" onclick="toggleDetail()" id="detail-toggle-btn">+ Show full report</button>
+
+      <div id="detail-sections" class="hidden">
+        <div class="detail-section">
+          <div class="detail-section-title">Where your time is leaking</div>
+          <div class="detail-content" id="report-leaks"></div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-section-title">What AI can realistically fix</div>
+          <div class="detail-content" id="report-fixes"></div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-section-title">Where to start</div>
+          <div class="detail-content" id="report-start"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+var questions = [
+  {
+    text: "How does your team handle repetitive admin tasks?",
+    sub: "Data entry, report generation, copying information between systems.",
+    options: [
+      { key: "A", text: "All manual. People do it by hand every time.", score: 3 },
+      { key: "B", text: "Some shortcuts and templates but mostly manual.", score: 2 },
+      { key: "C", text: "Largely automated. People handle exceptions only.", score: 1 }
+    ]
+  },
+  {
+    text: "How does information move between the tools your team uses daily?",
+    sub: "CRM, email, project management, accounting \u2014 how connected are they?",
+    options: [
+      { key: "A", text: "People copy and paste between systems constantly.", score: 3 },
+      { key: "B", text: "Some tools connect but plenty of manual hand-offs remain.", score: 2 },
+      { key: "C", text: "Tools are well integrated. Data flows automatically.", score: 1 }
+    ]
+  },
+  {
+    text: "How do you produce reports or updates for clients or leadership?",
+    sub: "This is one of the highest-leverage areas for AI.",
+    options: [
+      { key: "A", text: "Someone builds them from scratch each time. Hours per report.", score: 3 },
+      { key: "B", text: "Templates help but there\u2019s still significant manual work.", score: 2 },
+      { key: "C", text: "Largely automated. It\u2019s mostly a review task now.", score: 1 }
+    ]
+  },
+  {
+    text: "How does your team currently use AI tools?",
+    sub: "Be honest \u2014 this isn\u2019t a test.",
+    options: [
+      { key: "A", text: "We don\u2019t really. Maybe ChatGPT occasionally.", score: 3 },
+      { key: "B", text: "A few people use AI tools but there\u2019s no real system.", score: 2 },
+      { key: "C", text: "AI is embedded in how we work. Workflows are built around it.", score: 1 }
+    ]
+  },
+  {
+    text: "If you could fix one thing in your business right now, what would it be?",
+    sub: "Pick the one that costs the most time, money, or sanity.",
+    options: [
+      { key: "A", text: "The endless admin that eats hours every week.", score: 3 },
+      { key: "B", text: "The reporting and communication overhead that never shrinks.", score: 2 },
+      { key: "C", text: "Honestly, processes are solid. I\u2019m more curious than desperate.", score: 1 }
+    ]
+  }
+];
+
+var currentQ = 0;
+var answers = [];
+var userData = {};
+var detailVisible = false;
+
+function startAudit() {
+  document.getElementById('intro-screen').classList.add('hidden');
+  document.getElementById('quiz-screen').classList.remove('hidden');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  var q = questions[currentQ];
+  document.getElementById('q-number').textContent = 'Question ' + String(currentQ + 1).padStart(2, '0');
+  document.getElementById('q-text').textContent = q.text;
+  document.getElementById('q-sub').textContent = q.sub;
+  document.getElementById('progress-count').textContent = (currentQ + 1) + ' / ' + questions.length;
+  document.getElementById('progress-fill').style.width = ((currentQ) / questions.length) * 100 + '%';
+  document.getElementById('back-btn').style.visibility = currentQ === 0 ? 'hidden' : 'visible';
+  document.getElementById('next-btn').disabled = answers[currentQ] === undefined;
+  document.getElementById('next-btn').textContent = currentQ === questions.length - 1 ? 'See My Results \u2192' : 'Continue \u2192';
+
+  var optWrap = document.getElementById('options');
+  optWrap.innerHTML = '';
+  q.options.forEach(function(opt, i) {
+    var btn = document.createElement('button');
+    btn.className = 'option' + (answers[currentQ] === i ? ' selected' : '');
+    btn.innerHTML = '<span class="option-key">' + opt.key + '</span><span class="option-text">' + opt.text + '</span>';
+    btn.onclick = function() { selectOption(i); };
+    optWrap.appendChild(btn);
+  });
+
+  var card = document.getElementById('question-card');
+  card.style.animation = 'none';
+  card.offsetHeight;
+  card.style.animation = 'fadeUp 0.4s ease forwards';
+  card.style.opacity = '1';
+}
+
+function selectOption(i) {
+  answers[currentQ] = i;
+  document.querySelectorAll('.option').forEach(function(el, idx) {
+    el.classList.toggle('selected', idx === i);
+  });
+  document.getElementById('next-btn').disabled = false;
+}
+
+function goNext() {
+  if (answers[currentQ] === undefined) return;
+  if (currentQ < questions.length - 1) { currentQ++; renderQuestion(); }
+  else showContact();
+}
+
+function goBack() {
+  if (currentQ > 0) { currentQ--; renderQuestion(); }
+}
+
+function showContact() {
+  document.getElementById('quiz-screen').classList.add('hidden');
+  document.getElementById('contact-screen').classList.remove('hidden');
+}
+
+function getReport(scorePercent, answerScores) {
+  var adminScore = answerScores[0] || 2;
+  var toolsScore = answerScores[1] || 2;
+  var reportingScore = answerScores[2] || 2;
+  var aiUsageScore = answerScores[3] || 2;
+  var biggestPain = answerScores[4] || 2;
+
+  // Score rating
+  var scoreRating;
+  if (scorePercent >= 80) scoreRating = "Flying blind on automation";
+  else if (scorePercent >= 60) scoreRating = "Real opportunity here";
+  else if (scorePercent >= 40) scoreRating = "Aware but not acting";
+  else scoreRating = "Ahead of the pack";
+
+  // Score summary
+  var scoreSummary;
+  if (scorePercent >= 60) {
+    scoreSummary = "Your business is running on people where it should be running on systems. That is not a criticism \u2014 it is the norm. But the gap between where you are and where you could be is costing real hours and real money every week.";
+  } else if (scorePercent >= 40) {
+    scoreSummary = "You are not starting from zero. Some of the right pieces are in place. The opportunity is in closing the gap between knowing what should change and actually changing it.";
+  } else {
+    scoreSummary = "You are in better shape than most. The opportunity now is in the work that has become invisible \u2014 the manual steps nobody questions because they have always been there.";
+  }
+
+  // Three things that matter
+  var threeThings = [];
+
+  // Thing 1: biggest time leak
+  if (adminScore === 3 && toolsScore === 3) {
+    threeThings.push("Your biggest time leak is manual admin compounded by disconnected tools \u2014 your people are the integration layer between your systems.");
+  } else if (adminScore === 3) {
+    threeThings.push("Your biggest time leak is repetitive admin work done by hand. Every hour spent on mechanical tasks is an hour not spent on work that actually moves the business forward.");
+  } else if (toolsScore === 3) {
+    threeThings.push("Your biggest time leak is manual data movement between disconnected systems. Copy, paste, reformat, re-enter \u2014 every day.");
+  } else if (reportingScore === 3) {
+    threeThings.push("Your biggest time leak is reporting. Building reports from scratch every cycle burns your most expensive people on your least valuable work.");
+  } else {
+    threeThings.push("Your workflows have some automation but there are still meaningful manual steps that add up across the team every week.");
+  }
+
+  // Thing 2: most realistic fix
+  if (reportingScore >= 2 && toolsScore >= 2) {
+    threeThings.push("Workflow automation and AI-assisted reporting can realistically cut your manual overhead by 40\u201360% \u2014 the tools exist today and the setup takes days, not months.");
+  } else if (adminScore >= 2) {
+    threeThings.push("Automation tools like Make or Zapier can eliminate most of the repetitive admin work within days. The ROI is immediate and the setup is straightforward.");
+  } else {
+    threeThings.push("Targeted automation on your remaining manual workflows can still free up meaningful hours \u2014 the gains are in the processes nobody has questioned yet.");
+  }
+
+  // Thing 3: where to start
+  if (biggestPain === 3) {
+    threeThings.push("Start with admin: find your single most repetitive task, map it end to end, and automate it. The first win builds the case for everything else.");
+  } else if (biggestPain === 2) {
+    threeThings.push("Start with reporting: take your most frequent report, map where the data comes from, and automate the assembly. This is usually the fastest win.");
+  } else {
+    threeThings.push("Start by mapping where your team\u2019s time actually goes in a typical week. The biggest opportunities are usually in work that\u2019s become so routine nobody thinks to question it.");
+  }
+
+  // Leaks
+  var leakParagraphs = [];
+  if (adminScore >= 2) {
+    leakParagraphs.push("Your team is spending real hours on repetitive admin that does not require human judgement. Data entry, scheduling, copying between systems. In a team of ten, even two hours per person per week of avoidable admin is over a thousand hours a year.");
+  }
+  if (toolsScore >= 2) {
+    leakParagraphs.push("Your people are the integration layer between your tools. Copy, paste, reformat, re-enter. Every day. This is one of the most common and most fixable problems. The tools exist to connect these systems \u2014 nobody has connected them.");
+  }
+  if (reportingScore >= 2) {
+    leakParagraphs.push("Reports are being assembled by hand. Someone pulls data, formats it, writes context around it, sends it out. This consumes your most experienced people on your least valuable work. That ratio is backwards.");
+  }
+  if (leakParagraphs.length === 0) {
+    leakParagraphs.push("Even in well-run operations, there are hidden costs in the gaps between systems. The five minutes here, ten minutes there. It adds up to serious hours when you are honest about it across the whole team.");
+  }
+
+  // Fixes
+  var fixParagraphs = [];
+  if (adminScore >= 2 || toolsScore >= 2) {
+    fixParagraphs.push("Workflow automation tools \u2014 Make, Zapier, or native integrations \u2014 can eliminate most of the inter-system admin work within days. Not months. Days. The setup is straightforward and the ROI is immediate.");
+  }
+  if (reportingScore >= 2) {
+    fixParagraphs.push("AI can draft, compile, and format reports from your source data directly. What takes hours of pulling and formatting becomes a review task. This single change can save teams an entire day per week.");
+  }
+  if (aiUsageScore >= 2) {
+    fixParagraphs.push("The real value of AI comes from redesigning how work flows with AI built in from the start. Not bolted on at the end. That is a mindset shift, not a software purchase.");
+  }
+  if (fixParagraphs.length < 2) {
+    fixParagraphs.push("The remaining manual work can realistically be cut by 30 to 50 percent with targeted automation. The key is finding the workflows with the highest frequency and the lowest complexity.");
+  }
+
+  // Start
+  var startParagraphs = [];
+  if (biggestPain === 3) {
+    startParagraphs.push("Start with the admin. Find the single most repetitive task your team does \u2014 the one that happens most often, touches the most people, and requires the least judgement. Map it end to end. The first workflow you fix will pay for itself and build the confidence to fix the next one.");
+  } else if (biggestPain === 2) {
+    startParagraphs.push("Reporting is your biggest lever. Take your most frequent report and map exactly where the data comes from, what happens to it, and where it ends up. Most of that chain can be automated. Start there, prove it works, then expand.");
+  } else {
+    startParagraphs.push("You are in a position to be strategic. Start by honestly mapping where your team\u2019s time actually goes in a typical week. The biggest opportunities are usually in work so routine nobody thinks to question it.");
+  }
+  startParagraphs.push("Do not try to automate everything at once. Pick one workflow. Rebuild it properly. Measure the result. In most NZ businesses I work with, the first workflow redesign pays back inside 60 days.");
+
+  // CTA
+  var ctaText;
+  if (scorePercent >= 60) {
+    ctaText = "There are clear, fixable problems here costing you real time every week. A short conversation would be enough to identify the fastest path to getting that time back.";
+  } else if (scorePercent >= 40) {
+    ctaText = "The foundation is there but there is meaningful upside sitting on the table. A quick conversation can identify which workflows to hit first for the biggest impact.";
+  } else {
+    ctaText = "You are ahead of most \u2014 but there is always the next level. A quick chat can surface the opportunities that are not obvious from inside the operation.";
+  }
+
+  return {
+    scoreRating: scoreRating,
+    scoreSummary: scoreSummary,
+    threeThings: threeThings,
+    leaks: leakParagraphs.slice(0, 3).join('\n\n'),
+    fixes: fixParagraphs.slice(0, 3).join('\n\n'),
+    start: startParagraphs.join('\n\n'),
+    ctaText: ctaText
+  };
+}
+
+function generateReport() {
+  var name = document.getElementById('f-name').value.trim();
+  var email = document.getElementById('f-email').value.trim();
+  var company = document.getElementById('f-company').value.trim();
+  if (!name || !email || !company) { alert('Please fill in all three fields.'); return; }
+  userData = { name: name, email: email, company: company };
+
+  document.getElementById('contact-screen').classList.add('hidden');
+  document.getElementById('loading-screen').classList.remove('hidden');
+
+  var msgs = ['Analysing your responses', 'Mapping workflow gaps', 'Identifying quick wins', 'Writing your report'];
+  var mi = 0;
+  var interval = setInterval(function() { mi = (mi + 1) % msgs.length; document.getElementById('loading-text').textContent = msgs[mi]; }, 1800);
+
+  var answerScores = answers.map(function(ansIdx, qIdx) {
+    return questions[qIdx].options[ansIdx] ? questions[qIdx].options[ansIdx].score : 0;
+  });
+
+  var totalScore = answerScores.reduce(function(sum, s) { return sum + s; }, 0);
+  var maxScore = questions.length * 3;
+  var scorePercent = Math.round((totalScore / maxScore) * 100);
+
+  var answerSummary = questions.map(function(q, i) {
+    var sel = questions[i].options[answers[i]];
+    return 'Q' + (i + 1) + ': ' + q.text + '\nAnswer: ' + (sel ? sel.text : 'n/a');
+  }).join('\n\n');
+
+  // Send lead data to Regan via FormSubmit
+  var formData = new FormData();
+  formData.append('name', name);
+  formData.append('email', email);
+  formData.append('company', company);
+  formData.append('score', scorePercent + '/100');
+  formData.append('answers', answerSummary);
+  formData.append('_subject', 'AI Readiness Audit \u2014 ' + company + ' (' + scorePercent + '/100)');
+  formData.append('_template', 'table');
+  formData.append('_captcha', 'false');
+
+  fetch('https://formsubmit.co/ajax/regan@mini-robot.nz', {
+    method: 'POST',
+    body: formData
+  }).catch(function() {});
+
+  var report = getReport(scorePercent, answerScores);
+
+  setTimeout(function() {
+    clearInterval(interval);
+    document.getElementById('loading-screen').classList.add('hidden');
+    renderReport(report, scorePercent);
+  }, 3500);
+}
+
+function renderReport(report, scorePercent) {
+  document.getElementById('result-screen').classList.remove('hidden');
+  document.getElementById('result-name').textContent = userData.name;
+  document.getElementById('result-company').textContent = userData.company;
+  document.getElementById('score-number').textContent = scorePercent;
+  document.getElementById('score-rating').textContent = report.scoreRating;
+  document.getElementById('score-summary').textContent = report.scoreSummary;
+  document.getElementById('cta-text').textContent = report.ctaText;
+
+  // Three punchy items
+  var itemsWrap = document.getElementById('summary-items');
+  itemsWrap.innerHTML = '';
+  (report.threeThings || []).forEach(function(t, i) {
+    var item = document.createElement('div');
+    item.className = 'summary-item';
+    var num = document.createElement('span');
+    num.className = 'summary-num';
+    num.textContent = '0' + (i + 1);
+    var text = document.createElement('span');
+    text.className = 'summary-text';
+    text.textContent = t;
+    item.appendChild(num);
+    item.appendChild(text);
+    itemsWrap.appendChild(item);
+  });
+
+  // Detail sections
+  document.getElementById('report-leaks').innerHTML = report.leaks.split('\n\n').map(function(p) { return '<p>' + p + '</p>'; }).join('');
+  document.getElementById('report-fixes').innerHTML = report.fixes.split('\n\n').map(function(p) { return '<p>' + p + '</p>'; }).join('');
+  document.getElementById('report-start').innerHTML = report.start.split('\n\n').map(function(p) { return '<p>' + p + '</p>'; }).join('');
+
+  setTimeout(function() { document.getElementById('score-bar').style.width = scorePercent + '%'; }, 400);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function toggleDetail() {
+  detailVisible = !detailVisible;
+  document.getElementById('detail-sections').classList.toggle('hidden', !detailVisible);
+  document.getElementById('detail-toggle-btn').textContent = detailVisible ? '\u2212 Hide full report' : '+ Show full report';
+}
+</script>
+</body>
+</html>
