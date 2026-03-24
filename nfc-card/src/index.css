@@ -1,0 +1,243 @@
+@import "tailwindcss";
+
+@theme {
+  --color-gunmetal: #1a1d23;
+  --color-gunmetal-light: #252830;
+  --color-gunmetal-dark: #0d0f12;
+  --color-obsidian: #050508;
+  --color-electric: #00e5ff;
+  --color-electric-dim: #00b8cc;
+  --color-neon-green: #39ff14;
+  --color-circuit: #1e2128;
+  --color-steel: #8a8f98;
+  --color-silver: #c4c8d0;
+  --font-display: 'Orbitron', sans-serif;
+  --font-body: 'Space Grotesk', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+@layer base {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-gunmetal-light) transparent;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-obsidian);
+    color: white;
+    font-family: var(--font-body);
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background-color: var(--color-electric);
+    color: var(--color-obsidian);
+  }
+}
+
+/* Circuit grid background */
+.circuit-grid {
+  background-image:
+    linear-gradient(rgba(0, 229, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 229, 255, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Floating animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotateY(-8deg) rotateX(5deg); }
+  50% { transform: translateY(-20px) rotateY(-8deg) rotateX(5deg); }
+}
+
+@keyframes float-phone {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+@keyframes nfc-ripple {
+  0% { transform: scale(0.8); opacity: 0.6; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-phone {
+  animation: float-phone 5s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.1), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.8s ease-out forwards;
+}
+
+/* NFC card metallic finish */
+.card-metallic {
+  background: linear-gradient(
+    135deg,
+    #1a1d23 0%,
+    #2a2d35 25%,
+    #1a1d23 50%,
+    #2a2d35 75%,
+    #1a1d23 100%
+  );
+  box-shadow:
+    0 0 40px rgba(0, 229, 255, 0.15),
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.card-metallic::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.03) 45%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(255, 255, 255, 0.03) 55%,
+    transparent 60%
+  );
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* Glow effects */
+.glow-electric {
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.3), 0 0 60px rgba(0, 229, 255, 0.1);
+}
+
+.glow-text {
+  text-shadow: 0 0 20px rgba(0, 229, 255, 0.5), 0 0 40px rgba(0, 229, 255, 0.2);
+}
+
+.border-glow {
+  border: 1px solid rgba(0, 229, 255, 0.2);
+  box-shadow: inset 0 0 20px rgba(0, 229, 255, 0.05);
+}
+
+/* Feature card hover */
+.feature-card {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(0, 229, 255, 0.4);
+  box-shadow: 0 0 30px rgba(0, 229, 255, 0.1), 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* CTA button glow */
+.btn-glow {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.btn-glow::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(45deg, #00e5ff, #39ff14, #00e5ff);
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  filter: blur(8px);
+}
+
+.btn-glow:hover::before {
+  opacity: 1;
+}
+
+.btn-glow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 30px rgba(0, 229, 255, 0.4);
+}
+
+/* Phone mockup */
+.phone-frame {
+  background: linear-gradient(145deg, #2a2d35, #1a1d23);
+  box-shadow:
+    0 25px 80px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* Pricing card */
+.pricing-card {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pricing-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 40px rgba(0, 229, 255, 0.15), 0 30px 60px rgba(0, 0, 0, 0.4);
+}
+
+/* Scroll reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* NFC ripple ring animation */
+@keyframes ripple-ring {
+  0% {
+    width: 60px;
+    height: 60px;
+    opacity: 0.6;
+    border-width: 2px;
+  }
+  100% {
+    width: 160px;
+    height: 160px;
+    opacity: 0;
+    border-width: 1px;
+  }
+}
+
+.animate-ripple-1 {
+  animation: ripple-ring 2s ease-out infinite;
+}
+.animate-ripple-2 {
+  animation: ripple-ring 2s ease-out infinite 0.5s;
+}
+.animate-ripple-3 {
+  animation: ripple-ring 2s ease-out infinite 1s;
+}
